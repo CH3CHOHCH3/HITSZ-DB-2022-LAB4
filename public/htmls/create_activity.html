@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+
+<!-- Loding font -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+
+<!-- Custom Styles -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/login.css">
+
+<title>Campus Volunteer</title>
+</head>
+<script>
+	function check(){
+		var title = document.getElementById('title').value;
+        var category = document.getElementById('category').value;
+        var datetime = document.getElementById('datetime').value;
+        var location = document.getElementById('location').value;
+        var hc = document.getElementById('hc').value;
+        var desc = document.getElementById('desc').value;
+        
+        let arr = datetime.split("T");
+        datetime = arr[0] + " " + arr[1] + ":00";
+        console.log(datetime);
+        
+        fetch('/create_activity',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                category: category,
+                datetime: datetime,
+                location: location,
+                hc: hc,
+                desc: desc
+            })
+        }).then((res)=>{
+            if (res.redirected) {
+                window.location = res.url;
+            } else {
+                return res.json();
+            }
+        }).then((data)=>{
+            alert("Error:" + data.message);
+        });
+	}
+</script>
+<body>
+<div class="container" id="login">
+	<div class="row justify-content-center" style="margin-bottom: 10%;">
+	<div class="col-lg-8">
+	  	<div class="login">
+
+			<h2>CREATE AN ACTIVITY</h2>
+		
+		    <!-- Loging form -->
+			<form>
+				<div class="form-group">
+                    <label>
+                        Activity Title:
+                    <input type="text" class="form-control" id="title" placeholder="activity title">
+                    </label>
+				</div>
+
+				<div class="form-group">
+                    <label>
+                        Activity Category:
+                        <select id="category">
+                            <option value="0">Campus Service</option>
+                            <option value="1">Community Service</option>
+                            <option value="2">Activity assistance</option>
+                            <option value="3">Technology assistance</option>
+                        </select>
+                    </label>
+				</div>
+
+                <div class="form-group">
+                    <label>
+                        Date & Time:
+                        <input type="datetime-local" class="form-control" id="datetime">
+                    </label>
+				</div>
+
+                <div class="form-group">
+                    <label>
+                        Activity Location:
+                        <input type="text" class="form-control" id="location" placeholder="activity location">
+                    </label>
+				</div>
+                <div class="form-group">
+                    <label>
+                        People Number:
+                        <input type="number" class="form-control" min="0" id="hc" placeholder="people number">
+                    </label>
+				</div>
+                <div class="form-group">
+                    <label>
+                        Activity Description:
+                        <textarea id="desc" cols="40" rows="10"></textarea>
+                    </label>
+				</div>
+				<button type="button" class="btn btn-lg btn-block" onclick="check()">Submit</button>
+				<br>
+			</form>
+		 <!-- End Loging form -->
+		</div>
+	</div>
+	</div>
+</div>
+
+
+</body>
+</html>

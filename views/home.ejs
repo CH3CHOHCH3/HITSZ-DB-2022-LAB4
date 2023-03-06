@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Campus Volunteer</title>
+  <link  rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link  rel="stylesheet" href="/stylesheets/main.css" />
+  <link  rel="stylesheet" href="/stylesheets/login.css" />
+</head>
+<body style="background-color: #000;">
+  <header>
+    <div class="header-inner" style="height: 10vh;">
+      <nav id="navbar" class="navbar fixed-top navbar-expand-lg scrolling-navbar navbar-dark"  style="background-color: #000;">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <strong>Welcome, <%= username %></strong>
+        </a>
+        <!-- Collapsible content -->
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/applications">
+                My applications
+              </a>
+            </li>
+            <% if (isadmin === 1) {%>
+              <li class="nav-item">
+                <a class="nav-link" href="/activities">
+                  My activities
+                </a>
+              </li>
+            <% } %>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/logout">
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main style="padding-bottom: 10%;">
+    <div class="container nopadding-x-md" style="margin-top: 10%">
+      <div id="board">          
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-md-10 m-auto">
+              <div class="list-group">
+                <% if(count > 1) {%>
+                  <p class="h5">Here are <%= count %> activities in total.</p>
+                <% } else { %>
+                  <p class="h5">Here is <%= count %> activity in total.</p>
+                <% } %>
+                <hr>
+                <% for(var i = 0; i < activities.length; i++) { %>
+                  <% let act = activities[i]; %>
+                    <a href="/activity/<%= act.id %>" class="list-group-item list-group-item-action">
+                      <div class="list-group-item-title" style="margin-right: auto;"><%= act.title %></div>
+                      <div class="list-group-item-title">on <%= act.datetime%></div>
+                    </a>
+                <% } %>
+              </div>
+                <!-- <nav aria-label="navigation">
+                  <span class="pagination" id="pagination">
+                    <span class="page-number current">1</span>
+                    <a class="page-number" href="">2</a>
+                    <a class="page-number" href="">3</a>
+                  </span>
+                </nav> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

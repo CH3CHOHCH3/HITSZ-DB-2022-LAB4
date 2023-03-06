@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Campus Volunteer</title>
+  <link  rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link  rel="stylesheet" href="/stylesheets/main.css" />
+  <link  rel="stylesheet" href="/stylesheets/login.css" />
+  <script>
+    function show(id) {
+        if(document.getElementById(id).getAttribute('class') === 'category-collapse collapse'){
+            document.getElementById(id).setAttribute('class','category-collapse collapse show');
+        } else {
+            document.getElementById(id).setAttribute('class','category-collapse collapse');
+        }
+    }
+    function accept(id) {
+        fetch('/accept/' + id, {
+            method: 'POST',
+        }).then((res)=>{
+            return res.json();
+        }).then((data)=>{
+            if (data.success === 1) {
+                location.reload();
+            } else {
+                alert('Error' + data.message);
+            }
+        })
+    }
+    function reject(id) {
+        fetch('/reject/' + id, {
+            method: 'POST',
+        }).then((res)=>{
+            return res.json();
+        }).then((data)=>{
+            if (data.success === 1) {
+                location.reload();
+            } else {
+                alert('Error' + data.message);
+            }
+        })
+    }
+  </script>
+</head>
+<body style="background-color: #000;">
+  <header>
+    <div class="header-inner" style="height: 10vh;">
+      <nav id="navbar" class="navbar fixed-top navbar-expand-lg scrolling-navbar navbar-dark"  style="background-color: #000;">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <strong>Welcome, <%= username %></strong>
+        </a>
+        <!-- Collapsible content -->
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/applications">
+                My applications
+              </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/activities">
+                My activities
+            </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/logout">
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main style="padding-bottom: 10%;">
+    <div class="container nopadding-x-md" style="margin-top: 10%">
+      <div id="board">          
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-md-10 m-auto">
+              <!-- <div class="list-group">
+                  <hr>
+                  <% for(var i = 0; i < applications.length; i++) { %>
+                    <% let app = applications[i]; %>
+                    <a href="/application/<%= app.id %>" class="list-group-item list-group-item-action">
+                        <div class="list-group-item-title" style="margin-right: auto;"><%= app.username %></div>
+                        <div class="list-group-item-title"><%= app.time %></div>
+                    </a>
+                    <% } %>
+                </div> -->
+                <p class="h3"><%= title %></p>
+                <br>
+                <% if(count > 1) {%>
+                    <p class="h5">Here are <%= count %> applications.</p>
+                <% } else { %>
+                    <p class="h5">Here is <%= count %> application.</p>
+                <% } %>
+                <div class="category-list">
+                    <div class="category row nomargin-x">
+                        <% for(var i = 0; i < applications.length; i++) { %>
+                            <% let app = applications[i]; %>
+                            <a class="category-item list-group-item category-item-action col-10 col-md-11 col-xm-11 collapsed" title="<%= app.username %>" role="tab" data-toggle="collapse" href="javascript:void(0)" onclick="show('<%= i %>')" aria-expanded="false">
+                                <%= app.username %>
+                            </a>
+                            
+                            <div class="category-collapse collapse" id="<%= i %>" role="tabpanel" aria-labelledby="heading-819f78979f9e086c4baf480e2f2cc0e5">                
+                                <div class="category-post-list">
+                                    <b>Apply time:</b>
+                                    <a href="javascript:void(0)" title="Apply Time" class="list-group-item list-group-item-action">
+                                        <span class="category-post"><%= app.time %></span>
+                                    </a>
+                                    <b>Apply reason:</b>
+                                    <a href="javascript:void(0)" title="Apply Reason" class="list-group-item list-group-item-action">
+                                        <!-- <span class="category-post"></span> -->
+                                        <span class="category-post"><%= app.reason %></span>
+                                    </a>
+                                    <% if(app.status == 0) { %>
+                                        <button type="button" class="btn btn-lg btn-block" onclick="accept('<%= app.id %>')">Accept</button>
+                                        <button type="button" class="btn btn-lg btn-block" onclick="reject('<%= app.id %>')">Reject</button>
+                                    <% } else if (app.status == 1) { %>
+                                        <button type="button" class="btn btn-lg btn-block" onclick="">You've accepted this application.</button>
+                                    <% } else { %>
+                                        <button type="button" class="btn btn-lg btn-block" onclick="">You've rejected this application.</button>
+                                    <% } %>
+                                </div>
+                            </div>  
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+                <!-- <nav aria-label="navigation">
+                  <span class="pagination" id="pagination">
+                    <span class="page-number current">1</span>
+                    <a class="page-number" href="">2</a>
+                    <a class="page-number" href="">3</a>
+                  </span>
+                </nav> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Campus Volunteer</title>
+  <link  rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link  rel="stylesheet" href="/stylesheets/login.css" />
+  <link  rel="stylesheet" href="/stylesheets/main.css" />
+  <script>
+    function show(){
+      document.getElementById("trig").hidden = true;
+      document.getElementById("application-form").hidden = false;
+    }
+    function apply(){
+      if(document.getElementById('reason').value.length < 5){
+        alert("Your reason is too short.");
+        return;
+      }
+      fetch('/apply/' + document.getElementById('id').value, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                reason: document.getElementById('reason').value
+            })
+        }).then((res)=>{
+            if (res.redirected) {
+                window.location = res.url;
+            } else {
+                return res.json();
+            }
+        }).then((data)=>{
+            alert("Error:" + data.message);
+        })
+    }
+  </script>
+</head>
+<body style="background-color: #000;">
+  <input id="id" hidden='true' value='<%= activity.id %>'>
+  <header>
+    <div class="header-inner" style="height: 10vh;">
+      <nav id="navbar" class="navbar fixed-top navbar-expand-lg scrolling-navbar navbar-dark" style="background-color: #000;">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <strong>Welcome, <%= username %></strong>
+        </a>
+        <!-- Collapsible content -->
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/applications">
+                My applications
+              </a>
+            </li>
+            <% if (isadmin === 1) {%>
+              <li class="nav-item">
+                <a class="nav-link" href="/activities">
+                  My activities
+                </a>
+              </li>
+            <% } %>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/logout">
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="container-fluid nopadding-x" style="margin-top:  10%;">
+        <div class="row nomargin-x">
+        <div class="side-col d-none d-lg-block col-lg-2" style="padding-top: 64px;"></div>
+        <div class="col-lg-8 nopadding-x-md">
+          <div class="container nopadding-x-md" id="board-ctn" style="margin-bottom: 10%;">
+            <div id="board">
+                <article class="post-content mx-auto">
+                <div class="markdown-body">
+                    <h1><%= activity.title%></h1>
+                    <hr>
+                    <h3>Category</h3>
+                    <p>
+                        <% let categories = ['Campus Service', 'Community Service', 'Activity assistance', 'Technology assistance']%>
+                        <%= categories[activity.category_id] %>
+                    </p>
+                    <h3>Time</h3>
+                    <p><%=activity.time%></p>
+                    <h3>Location</h3>
+                    <p><%=activity.location%></p>
+                    <h3>People Needed</h3>
+                    <p><%=activity.hc%></p>
+                    <h3>Description</h3>
+                    <p><%=activity.desc%></p>
+                    <h4 id="trig">Click <a href="javascript:void(0)" style="text-decoration:underline;" onclick="show()">here</a> to join this activity.</h4>
+                  </div>
+                  <div id="application-form" hidden='true'>
+                    <textarea cols="102" rows="5" id="reason" placeholder="Give a brief description to your reason for application."></textarea>
+                    <button class="btn btn-lg" style="background-color: #000;color: #fff;width: 20vh;margin-left: 40%;margin-right: auto;" onclick="apply()">
+                      Apply
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </main>
+    
+</body>
+</html>
